@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import com.nujat.yumorder.R;
+import com.nujat.yumorder.login_page.LoginPage;
 
 
 public class HomePage extends AppCompatActivity {
@@ -13,9 +14,9 @@ public class HomePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_page);
 
-//        findViewById(R.id.someButton).setOnClickListener(v -> {
-//            Intent intent = new Intent(HomePage.this, AnotherActivity.class);
-//            startActivity(intent);
- //       });
+        findViewById(R.id.continueButton).setOnClickListener(v -> {
+            Intent intent = new Intent(HomePage.this, LoginPage.class);
+            startActivity(intent);
+        });
     }
 }
