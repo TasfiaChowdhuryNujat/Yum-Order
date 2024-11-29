@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "748498032751",
+    "project_id": "yumorder-89d09",
+    "storage_bucket": "yumorder-89d09.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:748498032751:android:cadfbe584d02b8005ed59a",
+        "android_client_info": {
+          "package_name": "com.nujat.yumorder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUodHrxkxgJhY5bNkD9LbTvBnfNUwBSQI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

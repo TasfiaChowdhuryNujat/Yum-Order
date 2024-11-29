@@ -11,13 +11,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.nujat.yumorder.R;
 import com.nujat.yumorder.login_page.LoginPage;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class RegistrationPage extends AppCompatActivity {
 
     private EditText etFullName, etEmail, etPassword, etConfirmPassword;
-    private Button btnSignUp,btnLogin;
+    private Button btnSignUp, btnLogin;
+
+    private FirebaseFirestore db;  // Firestore instance
+    private FirebaseAuth auth;  // FirebaseAuth instance
 
     // Patterns for validation
     private static final Pattern namePattern = Pattern.compile("^[a-zA-Z ]+$");
@@ -29,6 +37,10 @@ public class RegistrationPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registration_page);
 
+        // Initialize Firebase components
+        db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+
         // Initialize views
         etFullName = findViewById(R.id.et_full_name);
         etEmail = findViewById(R.id.et_email);
@@ -37,30 +49,23 @@ public class RegistrationPage extends AppCompatActivity {
         btnSignUp = findViewById(R.id.btn_sign_up);
         btnLogin = findViewById(R.id.btn_login);
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RegistrationPage.this, LoginPage.class);
-                startActivity(intent);
-            }
+        // Navigate to login page
+        btnLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(RegistrationPage.this, LoginPage.class);
+            startActivity(intent);
         });
-        // Set up the sign-up button listener
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                validateAndRegister();
-            }
-        });
+
+        // Handle Sign Up button click
+        btnSignUp.setOnClickListener(v -> validateAndRegister());
     }
 
     private void validateAndRegister() {
-        // Get input values
         String fullName = etFullName.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString();
         String confirmPassword = etConfirmPassword.getText().toString();
 
-        // Validate full name
+        // Validate input
         if (TextUtils.isEmpty(fullName)) {
             etFullName.setError("Full name is required!");
             etFullName.requestFocus();
@@ -71,8 +76,6 @@ public class RegistrationPage extends AppCompatActivity {
             etFullName.requestFocus();
             return;
         }
-
-        // Validate email
         if (TextUtils.isEmpty(email)) {
             etEmail.setError("Email is required!");
             etEmail.requestFocus();
@@ -83,8 +86,6 @@ public class RegistrationPage extends AppCompatActivity {
             etEmail.requestFocus();
             return;
         }
-
-        // Validate password
         if (TextUtils.isEmpty(password)) {
             etPassword.setError("Password is required!");
             etPassword.requestFocus();
@@ -95,8 +96,6 @@ public class RegistrationPage extends AppCompatActivity {
             etPassword.requestFocus();
             return;
         }
-
-        // Validate confirm password
         if (TextUtils.isEmpty(confirmPassword)) {
             etConfirmPassword.setError("Confirm your password!");
             etConfirmPassword.requestFocus();
@@ -108,9 +107,47 @@ public class RegistrationPage extends AppCompatActivity {
             return;
         }
 
-        // If all validations pass
-        Toast.makeText(this, "Registration Successful!", Toast.LENGTH_SHORT).show();
+        // Disable the sign-up button during registration attempt
+        btnSignUp.setEnabled(false);
 
-        // Perform further actions like storing data in the database
+        // Register the user with Firebase Authentication
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // User is registered successfully
+                        FirebaseUser user = auth.getCurrentUser();
+
+                        // Save user data to Firestore
+                        saveDataToFirestore(fullName, email, user.getUid());
+                    } else {
+                        // Handle registration failure
+                        btnSignUp.setEnabled(true); // Re-enable the sign-up button
+                        Toast.makeText(RegistrationPage.this, "Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void saveDataToFirestore(String fullName, String email, String uid) {
+        // Create a map with the user's data
+        Map<String, Object> user = new HashMap<>();
+        user.put("fullName", fullName);
+        user.put("email", email);
+
+        // Save the data in Firestore under the 'users' collection
+        db.collection("users")
+                .document(uid)  // Use UID as document ID
+                .set(user)
+                .addOnSuccessListener(aVoid -> {
+                    btnSignUp.setEnabled(true);  // Re-enable the button
+                    Toast.makeText(RegistrationPage.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
+                    // Redirect to the login page or another page
+                    Intent intent = new Intent(RegistrationPage.this, LoginPage.class);
+                    startActivity(intent);
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    btnSignUp.setEnabled(true);  // Re-enable the button
+                    Toast.makeText(RegistrationPage.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
     }
 }

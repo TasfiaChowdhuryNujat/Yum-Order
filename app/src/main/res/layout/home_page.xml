@@ -24,7 +24,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:textAlignment="center"
-        android:text="Welcome to HomePage"
+        android:text="@string/welcome_to_yumorder"
         android:textColor="#FFFFFF"
         android:textSize="35sp"
         android:textStyle="bold" />
