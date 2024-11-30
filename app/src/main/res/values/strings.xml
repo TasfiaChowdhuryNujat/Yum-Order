@@ -9,4 +9,6 @@
     <string name="login">login</string>
     <string name="no_account">No Account</string>
     <string name="welcome_to_yumorder">Welcome to YumOrder</string>
+    <string name="logout">Logout</string>
+    <string name="main_page">Main Page</string>
 </resources>

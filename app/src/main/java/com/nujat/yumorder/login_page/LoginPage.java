@@ -7,9 +7,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.nujat.yumorder.R;
 import com.nujat.yumorder.home_page.HomePage;
+import com.nujat.yumorder.main_page.MainPage;
 import com.nujat.yumorder.registration_page.RegistrationPage;
 
 import java.util.regex.Pattern;
@@ -78,12 +82,22 @@ public class LoginPage extends AppCompatActivity {
             etPassword.requestFocus();
             return;
         }
+        // Firebase Authentication
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Login successful
+                        Toast.makeText(LoginPage.this, "Login Successful!", Toast.LENGTH_SHORT).show();
 
-        // If all validations pass
-        Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show();
-
-        // Navigate to Home Page
-//        Intent intent = new Intent(LoginPage.this, HomePage.class);
-//        startActivity(intent);
+                        // Navigate to Home Page
+                        Intent intent = new Intent(LoginPage.this, MainPage.class);
+                        startActivity(intent);
+                        finish(); // Optional, to close the LoginPage
+                    } else {
+                        // Login failed
+                        Toast.makeText(LoginPage.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 }
