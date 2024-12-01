@@ -13,16 +13,6 @@
         android:title="@string/main_page"
         android:titleTextColor="#FFFFFF" />
 
-    <!-- Content below the Toolbar -->
-    <TextView
-        android:id="@+id/mainPageText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="This is the main page of the app"
-        android:textSize="20sp"
-        android:textColor="#1C1A1A"
-        android:layout_below="@id/app_toolbar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp" />
+  
 
 </RelativeLayout>
