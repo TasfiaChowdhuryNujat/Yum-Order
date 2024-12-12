@@ -117,6 +117,18 @@ public class RegistrationPage extends AppCompatActivity {
                         // User is registered successfully
                         FirebaseUser user = auth.getCurrentUser();
 
+                        if (user != null) {
+                            // Send email verification
+                            user.sendEmailVerification()
+                                    .addOnCompleteListener(verificationTask -> {
+                                        if (verificationTask.isSuccessful()) {
+                                            Toast.makeText(RegistrationPage.this, "Verification email sent. Please check your inbox.", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(RegistrationPage.this, "Failed to send verification email: " + verificationTask.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                        }
+
                         // Save user data to Firestore
                         saveDataToFirestore(fullName, email, user.getUid());
                     } else {
@@ -139,7 +151,7 @@ public class RegistrationPage extends AppCompatActivity {
                 .set(user)
                 .addOnSuccessListener(aVoid -> {
                     btnSignUp.setEnabled(true);  // Re-enable the button
-                    Toast.makeText(RegistrationPage.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegistrationPage.this, "Registration Successful! Please verify your email.", Toast.LENGTH_SHORT).show();
                     // Redirect to the login page or another page
                     Intent intent = new Intent(RegistrationPage.this, LoginPage.class);
                     startActivity(intent);

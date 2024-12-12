@@ -3,7 +3,6 @@ package com.nujat.yumorder.login_page;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -11,21 +10,17 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.nujat.yumorder.R;
-import com.nujat.yumorder.home_page.HomePage;
+import com.nujat.yumorder.admin_page.AdminPage;
 import com.nujat.yumorder.main_page.MainPage;
 import com.nujat.yumorder.registration_page.RegistrationPage;
-
-import java.util.regex.Pattern;
 
 public class LoginPage extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
     private Button btnLogin, btnRegister;
-
-    // Patterns for validation
-    private static final Pattern emailPattern = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
-    private static final Pattern passwordPattern = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{6,}$");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,19 +34,11 @@ public class LoginPage extends AppCompatActivity {
         btnRegister = findViewById(R.id.btn_register);
 
         // Set up listeners
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                validateAndLogin();
-            }
-        });
+        btnLogin.setOnClickListener(v -> validateAndLogin());
 
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginPage.this, RegistrationPage.class);
-                startActivity(intent);
-            }
+        btnRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginPage.this, RegistrationPage.class);
+            startActivity(intent);
         });
     }
 
@@ -65,11 +52,6 @@ public class LoginPage extends AppCompatActivity {
             etEmail.requestFocus();
             return;
         }
-        if (!emailPattern.matcher(email).matches()) {
-            etEmail.setError("Enter a valid email!");
-            etEmail.requestFocus();
-            return;
-        }
 
         // Validate password
         if (TextUtils.isEmpty(password)) {
@@ -77,23 +59,37 @@ public class LoginPage extends AppCompatActivity {
             etPassword.requestFocus();
             return;
         }
-        if (!passwordPattern.matcher(password).matches()) {
-            etPassword.setError("Invalid password format!");
-            etPassword.requestFocus();
-            return;
-        }
+
         // Firebase Authentication
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        // Login successful
-                        Toast.makeText(LoginPage.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                        // Login successful, check user's userType in Firestore
+                        String userId = auth.getCurrentUser().getUid();
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                        // Navigate to Home Page
-                        Intent intent = new Intent(LoginPage.this, MainPage.class);
-                        startActivity(intent);
-                        finish(); // Optional, to close the LoginPage
+                        db.collection("users").document(userId).get()
+                                .addOnCompleteListener(dbTask -> {
+                                    if (dbTask.isSuccessful() && dbTask.getResult() != null) {
+                                        DocumentSnapshot document = dbTask.getResult();
+                                        String userType = document.getString("userType");
+
+                                        if ("admin".equals(userType)) {
+                                            // Navigate to AdminPage if user is admin
+                                            Intent intent = new Intent(LoginPage.this, AdminPage.class);
+                                            startActivity(intent);
+                                        } else {
+                                            // Navigate to MainPage if user is not admin
+                                            Intent intent = new Intent(LoginPage.this, MainPage.class);
+                                            startActivity(intent);
+                                        }
+                                    } else {
+                                        // Handle potential errors (e.g., no document found or other failure)
+                                        Toast.makeText(LoginPage.this, "Error fetching user data", Toast.LENGTH_SHORT).show();
+                                    }
+                                    finish(); // Close LoginPage
+                                });
                     } else {
                         // Login failed
                         Toast.makeText(LoginPage.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();

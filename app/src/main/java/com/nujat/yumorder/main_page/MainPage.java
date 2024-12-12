@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.nujat.yumorder.MainActivity;
 import com.nujat.yumorder.R;
 import com.nujat.yumorder.login_page.LoginPage;
 
@@ -38,7 +39,7 @@ public class MainPage extends AppCompatActivity {
             auth.signOut();
 
             // Redirect to LoginPage
-            Intent intent = new Intent(MainPage.this, LoginPage.class);
+            Intent intent = new Intent(MainPage.this, MainActivity.class);
             startActivity(intent);
             finish(); // Close MainPage
             return true;
