@@ -11,4 +11,8 @@
     <string name="welcome_to_yumorder">Welcome to YumOrder</string>
     <string name="logout">Logout</string>
     <string name="main_page">Main Page</string>
+    <string name="item_image_desc">item_image_desc </string>
+    <string name="item_name">Item Name</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
 </resources>

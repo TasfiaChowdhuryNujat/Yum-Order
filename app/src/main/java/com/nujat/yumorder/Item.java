@@ -4,17 +4,21 @@ public class Item {
     private String name;
     private String price;
     private String details;
+    private String id;
 
     // No-argument constructor required for Firebase
     public Item() {}
 
     // Constructor with parameters
-    public Item(String name, String price, String details) {
+    public Item(String id,String name, String price) {
         this.name = name;
         this.price = price;
-        this.details = details;
-    }
 
+        this.id=id;
+    }
+    public String getId() {
+        return id;
+    }
     // Getters and Setters (required by Firebase)
     public String getName() {
         return name;

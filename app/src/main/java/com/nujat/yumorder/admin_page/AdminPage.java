@@ -12,13 +12,25 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.nujat.yumorder.Item;
+import com.nujat.yumorder.ItemAdapter;
 import com.nujat.yumorder.R;
 import com.nujat.yumorder.add_admin.AddAdmin;
 import com.nujat.yumorder.login_page.LoginPage;
 import com.nujat.yumorder.add_admin.AddAdmin;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+// Other imports...
+
 public class AdminPage extends AppCompatActivity {
-    private LinearLayout itemListLayout;
+    private RecyclerView recyclerView;
+    private ItemAdapter adapter;
+    private List<Item> itemList;
     private FirebaseFirestore db;
 
     @Override
@@ -26,18 +38,22 @@ public class AdminPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_page);
 
-        // Set up the Toolbar
         Toolbar toolbar = findViewById(R.id.app_toolbar);
         setSupportActionBar(toolbar);
 
-        itemListLayout = findViewById(R.id.item_ListLayout);
-        Button addItemButton = findViewById(R.id.add_ItemButton);
-        db = FirebaseFirestore.getInstance();
+        recyclerView = findViewById(R.id.recyclerView_items);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        Button addItemButton = findViewById(R.id.add_ItemButton);
         addItemButton.setOnClickListener(v -> {
             Intent intent = new Intent(AdminPage.this, AddAdmin.class);
             startActivity(intent);
         });
+
+        db = FirebaseFirestore.getInstance();
+        itemList = new ArrayList<>();
+        adapter = new ItemAdapter(this, itemList);
+        recyclerView.setAdapter(adapter);
 
         loadItems();
     }
@@ -46,67 +62,14 @@ public class AdminPage extends AppCompatActivity {
         db.collection("items")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    itemListLayout.removeAllViews();
-                    int index = 1;
+                    itemList.clear();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        String itemName = document.getString("name");
+                        String id = document.getId();
+                        String name = document.getString("name");
                         String price = document.getString("price");
-                        String itemId = document.getId();
-
-                        TextView itemTextView = new TextView(this);
-                        itemTextView.setText(index + ". " + itemName + " - " + price);
-
-                        Button updateButton = new Button(this);
-                        updateButton.setText("Update");
-                        updateButton.setOnClickListener(v -> {
-                            Intent intent = new Intent(AdminPage.this, AddAdmin.class);
-                            intent.putExtra("itemId", itemId);
-                            startActivity(intent);
-                        });
-
-                        Button deleteButton = new Button(this);
-                        deleteButton.setText("Delete");
-                        deleteButton.setOnClickListener(v -> deleteItem(itemId));
-
-                        LinearLayout rowLayout = new LinearLayout(this);
-                        rowLayout.setOrientation(LinearLayout.HORIZONTAL);
-                        rowLayout.addView(itemTextView);
-                        rowLayout.addView(updateButton);
-                        rowLayout.addView(deleteButton);
-
-                        itemListLayout.addView(rowLayout);
-                        index++;
+                        itemList.add(new Item(id, name, price));
                     }
+                    adapter.notifyDataSetChanged();
                 });
-    }
-
-    private void deleteItem(String itemId) {
-        db.collection("items").document(itemId)
-                .delete()
-                .addOnSuccessListener(aVoid -> loadItems());
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu with the logout option
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle menu item clicks
-        if (item.getItemId() == R.id.action_logout) {
-            // Log out the user
-            FirebaseAuth auth = FirebaseAuth.getInstance();
-            auth.signOut();
-
-            // Redirect to LoginPage
-            Intent intent = new Intent(AdminPage.this, LoginPage.class);
-            startActivity(intent);
-            finish(); // Close AdminPage
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
