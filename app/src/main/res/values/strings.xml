@@ -15,4 +15,6 @@
     <string name="item_name">Item Name</string>
     <string name="update">Update</string>
     <string name="delete">Delete</string>
+    <string name="item_details">Item Details</string>
+    <string name="item_price">Item Price</string>
 </resources>
