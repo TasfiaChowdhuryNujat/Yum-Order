@@ -12,6 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.nujat.yumorder.CartActivity;
 import com.nujat.yumorder.MainActivity;
 import com.nujat.yumorder.R;
 import com.nujat.yumorder.ItemAdapterMainPage;
@@ -64,9 +65,9 @@ public class MainPage extends AppCompatActivity {
                     itemList.clear();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String name = document.getString("name");
-                        String details=document.getString("details");
+                        String details = document.getString("details");
                         String price = document.getString("price");
-                        itemList.add(new Item(name,details, price));
+                        itemList.add(new Item(name, details, price));
                     }
                     adapter.notifyDataSetChanged();
                     swipeRefreshLayout.setRefreshing(false); // Hide refresh indicator
@@ -76,15 +77,20 @@ public class MainPage extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu with the logout option
+        // Inflate the menu with the cart and logout options
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle menu item clicks
-        if (item.getItemId() == R.id.action_logout) {
+        int id = item.getItemId();
+        if (id == R.id.action_cart) {
+            // Navigate to the cart activity
+            Intent cartIntent = new Intent(MainPage.this, CartActivity.class);
+            startActivity(cartIntent);
+            return true;
+        } else if (id == R.id.action_logout) {
             FirebaseAuth auth = FirebaseAuth.getInstance();
             auth.signOut();
             Intent intent = new Intent(MainPage.this, MainActivity.class);
@@ -94,4 +100,5 @@ public class MainPage extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

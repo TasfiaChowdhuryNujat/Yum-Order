@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- Item Image -->
     <ImageView
         android:id="@+id/item_detail_image"
         android:layout_width="match_parent"
@@ -12,30 +13,91 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_placeholder" />
 
+    <!-- Item Name -->
     <TextView
         android:id="@+id/item_detail_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Item Name"
         android:textSize="20sp"
-        android:layout_marginTop="16dp" />
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:textAlignment="center" />
 
+    <!-- Item Details -->
     <TextView
         android:id="@+id/item_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/item_details"
         android:textSize="18sp"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:textAlignment="center" />
 
+    <!-- Item Price -->
     <TextView
         android:id="@+id/item_detail_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/item_price"
         android:textSize="18sp"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:textAlignment="center" />
 
+    <!-- Count and Increase/Decrease Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:gravity="center">
+
+        <!-- Decrease Button -->
+        <Button
+            android:id="@+id/btn_decrease_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="-"
+            android:backgroundTint="#fa4a0c"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <!-- Count Text -->
+        <TextView
+            android:id="@+id/item_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="1"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:layout_marginHorizontal="8dp" />
+
+        <!-- Increase Button -->
+        <Button
+            android:id="@+id/btn_increase_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="+"
+            android:backgroundTint="#fa4a0c"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Add to Cart Button -->
+    <Button
+        android:id="@+id/btn_add_to_cart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Add to Cart"
+        android:backgroundTint="#fa4a0c"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:layout_marginTop="24dp" />
 
 </LinearLayout>
-

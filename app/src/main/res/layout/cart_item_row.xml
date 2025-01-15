@@ -1,0 +1,48 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/cart_item_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Item Name"
+        android:textStyle="italic"/>
+
+    <TextView
+        android:id="@+id/cart_item_price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Price"
+        android:textStyle="italic"/>
+
+    <TextView
+        android:id="@+id/cart_item_count"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Qnt: "
+        android:textStyle="italic"/>
+
+    <Button
+        android:id="@+id/btn_update_item"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:text="Edit"
+        android:backgroundTint="#fa4a0c"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"/>
+
+    <Button
+        android:id="@+id/btn_delete_item"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:text="X"
+        android:backgroundTint="#fa4a0c"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"/>
+</LinearLayout>
