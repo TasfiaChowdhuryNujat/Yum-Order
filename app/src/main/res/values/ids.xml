@@ -5,4 +5,9 @@
     <item name="cart_item_count" type="id" />
     <item name="btn_delete_item" type="id" />
     <item name="btn_update_item" type="id" />
+    <item name="name_Field" type="id" />
+    <item name="price_Field" type="id" />
+    <item name="details_Field" type="id" />
+    <item name="uploadImageButton" type="id" />
+    <item name="imageView" type="id" />
 </resources>

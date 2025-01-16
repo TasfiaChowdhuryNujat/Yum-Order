@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tv_checkout_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Checkout Summary"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:paddingBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tv_checkout_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Details will be displayed here."
+        android:paddingBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tv_total_amount_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Total Amount: $0.00"
+        android:textStyle="bold"
+        android:paddingBottom="16dp" />
+
+    <Button
+        android:id="@+id/btn_close_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#fa4a0c"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:text="Close" />
+</LinearLayout>

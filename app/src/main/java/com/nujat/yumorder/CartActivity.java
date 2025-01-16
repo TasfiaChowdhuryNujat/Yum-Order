@@ -47,18 +47,8 @@ public class CartActivity extends AppCompatActivity {
         loadCartItems();
 
         checkoutButton.setOnClickListener(v -> {
-            // Show a simple memo in a Toast
-            Toast.makeText(this, "Checkout successful! Your cart is cleared.", Toast.LENGTH_SHORT).show();
-
-            // Clear items from the cart in Firestore
+            // Clear cart and show a detailed dialog for checkout summary
             clearCart();
-
-            // Optionally, clear items from the UI as well
-            cartItems.clear();
-            adapter.notifyDataSetChanged();
-
-            // Optionally, update total amount to 0
-            totalAmountTextView.setText("Total: $0.00");
         });
     }
 
@@ -103,7 +93,7 @@ public class CartActivity extends AppCompatActivity {
     }
 
     /**
-     * Clears all items from the cart in Firestore.
+     * Clears all items from the cart in Firestore and shows a dialog with the checkout summary.
      */
     private void clearCart() {
         if (auth.getCurrentUser() == null) {
@@ -120,23 +110,19 @@ public class CartActivity extends AppCompatActivity {
                     AtomicInteger deletedCount = new AtomicInteger();
                     double totalAmount = 0.0;
 
-                    // StringBuilder to hold the memo details for the Toast message
-                    StringBuilder memoMessage = new StringBuilder("Checkout Details:\n");
+                    StringBuilder memoMessage = new StringBuilder();
 
                     for (com.google.firebase.firestore.DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
                         CartItem item = doc.toObject(CartItem.class);
 
-                        // Calculate total amount for this item (quantity * price)
                         double itemTotal = item.calculateTotalPrice();
                         totalAmount += itemTotal;
 
-                        // Add item details to the memo message
                         memoMessage.append(item.getItemName())
                                 .append(" - Quantity: ").append(item.getCount())
                                 .append(" - Amount: $").append(String.format("%.2f", itemTotal))
                                 .append("\n");
 
-                        // Delete the item from the Firestore cart
                         double finalTotalAmount = totalAmount;
                         db.collection("users")
                                 .document(auth.getCurrentUser().getUid())
@@ -146,25 +132,37 @@ public class CartActivity extends AppCompatActivity {
                                 .addOnSuccessListener(aVoid -> {
                                     deletedCount.getAndIncrement();
                                     if (deletedCount.get() == totalItems) {
-                                        // After all items are deleted, add the total amount to the memo
-                                        memoMessage.append("\nTotal Amount: $").append(String.format("%.2f", finalTotalAmount));
-
-                                        // Show the Toast with the detailed checkout summary
-                                        Toast.makeText(this, memoMessage.toString(), Toast.LENGTH_LONG).show();
-
-                                        // Clear local cart items and update UI
-                                        cartItems.clear();
-                                        adapter.notifyDataSetChanged();
-                                        totalAmountTextView.setText("Total: $0.00");
+                                        showCheckoutDialog(memoMessage.toString(), finalTotalAmount);
                                     }
                                 })
-                                .addOnFailureListener(e -> {
-                                    // Handle error
-                                    Log.e("CartActivity", "Error deleting document: " + e.getMessage());
-                                });
+                                .addOnFailureListener(e -> Log.e("CartActivity", "Error deleting document: " + e.getMessage()));
                     }
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, "Failed to load cart for clearing: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Displays the checkout details in a dialog.
+     */
+    private void showCheckoutDialog(String memoMessage, double totalAmount) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        android.view.View dialogView = getLayoutInflater().inflate(R.layout.dialog_checkout_summary, null);
+
+        TextView detailsTextView = dialogView.findViewById(R.id.tv_checkout_details);
+        TextView totalAmountTextView = dialogView.findViewById(R.id.tv_total_amount_dialog);
+        Button closeButton = dialogView.findViewById(R.id.btn_close_dialog);
+
+        detailsTextView.setText(memoMessage);
+        totalAmountTextView.setText(String.format("Total Amount: $%.2f", totalAmount));
+
+        builder.setView(dialogView);
+        android.app.AlertDialog dialog = builder.create();
+
+        closeButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            Toast.makeText(this, "Order confirmed! Thank you for shopping.", Toast.LENGTH_SHORT).show();
+        });
+
+        dialog.show();
+    }
 }
