@@ -1,23 +1,20 @@
+// ItemDetailsPage.java
 package com.nujat.yumorder.item_details_page;
-
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nujat.yumorder.R;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class ItemDetailsPage extends AppCompatActivity {
-
     private int itemCount = 1;
 
     @Override
@@ -25,7 +22,6 @@ public class ItemDetailsPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.item_details_page);
 
-        // Get references to UI components
         ImageView itemImage = findViewById(R.id.item_detail_image);
         TextView itemName = findViewById(R.id.item_detail_name);
         TextView itemDetails = findViewById(R.id.item_details);
@@ -35,23 +31,29 @@ public class ItemDetailsPage extends AppCompatActivity {
         Button decreaseButton = findViewById(R.id.btn_decrease_count);
         TextView itemCountView = findViewById(R.id.item_count);
 
-        // Retrieve data from Intent
         String name = getIntent().getStringExtra("itemName");
         String details = getIntent().getStringExtra("itemDetails");
         String price = getIntent().getStringExtra("itemPrice");
-        int imageRes = getIntent().getIntExtra("itemImage", R.drawable.ic_placeholder);
+        String imageUrl = getIntent().getStringExtra("itemImageUrl");
 
-        // Set data to views
         itemName.setText(name);
         itemDetails.setText(details);
         itemPrice.setText(price);
-        itemImage.setImageResource(imageRes);
 
-        // Firebase setup
+        // Load image using Glide
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Glide.with(this)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.ic_placeholder)
+                    .error(R.drawable.ic_placeholder)
+                    .into(itemImage);
+        } else {
+            itemImage.setImageResource(R.drawable.ic_placeholder);
+        }
+
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Add to cart functionality
         addToCartButton.setOnClickListener(view -> {
             if (auth.getCurrentUser() == null) {
                 Toast.makeText(this, "Please log in to add items to your cart.", Toast.LENGTH_SHORT).show();
@@ -60,7 +62,6 @@ public class ItemDetailsPage extends AppCompatActivity {
 
             String userId = auth.getCurrentUser().getUid();
 
-            // Check if the item already exists in the cart
             db.collection("users")
                     .document(userId)
                     .collection("cart")
@@ -68,7 +69,6 @@ public class ItemDetailsPage extends AppCompatActivity {
                     .get()
                     .addOnSuccessListener(querySnapshot -> {
                         if (!querySnapshot.isEmpty()) {
-                            // Item exists: Sum previous count with the current itemCount
                             DocumentReference docRef = querySnapshot.getDocuments().get(0).getReference();
                             int previousCount = querySnapshot.getDocuments().get(0).getLong("count").intValue();
                             int newCount = previousCount + itemCount;
@@ -79,12 +79,11 @@ public class ItemDetailsPage extends AppCompatActivity {
                                     .addOnFailureListener(e ->
                                             Toast.makeText(this, "Failed to update count: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                         } else {
-                            // Item doesn't exist: Add new document
                             Map<String, Object> cartItem = new HashMap<>();
                             cartItem.put("itemName", name);
                             cartItem.put("itemDetails", details);
                             cartItem.put("itemPrice", price);
-                            cartItem.put("itemImage", imageRes);
+                            cartItem.put("itemImageUrl", imageUrl);
                             cartItem.put("count", itemCount);
 
                             db.collection("users")
@@ -101,13 +100,11 @@ public class ItemDetailsPage extends AppCompatActivity {
                             Toast.makeText(this, "Failed to check cart: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         });
 
-        // Increase button functionality
         increaseButton.setOnClickListener(view -> {
             itemCount++;
             itemCountView.setText(String.valueOf(itemCount));
         });
 
-        // Decrease button functionality
         decreaseButton.setOnClickListener(view -> {
             if (itemCount > 1) {
                 itemCount--;

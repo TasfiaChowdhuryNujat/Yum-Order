@@ -1,9 +1,7 @@
+// ItemAdapterMainPage.java
 package com.nujat.yumorder;
-
-
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.bumptech.glide.Glide;
 import com.nujat.yumorder.item_details_page.ItemDetailsPage;
-
 import java.util.List;
 
 public class ItemAdapterMainPage extends RecyclerView.Adapter<ItemAdapterMainPage.ItemViewHolder> {
-
     private Context context;
     private List<Item> itemList;
 
@@ -37,16 +33,25 @@ public class ItemAdapterMainPage extends RecyclerView.Adapter<ItemAdapterMainPag
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Item item = itemList.get(position);
         holder.name.setText(item.getName());
-       // holder.details.setText(item.getDetails());
         holder.price.setText(item.getPrice());
-        holder.image.setImageResource(R.drawable.ic_placeholder); // Dummy image
+
+        // Load image using Glide
+        if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) {
+            Glide.with(context)
+                    .load(item.getImageUrl())
+                    .placeholder(R.drawable.ic_placeholder)
+                    .error(R.drawable.ic_placeholder)
+                    .into(holder.image);
+        } else {
+            holder.image.setImageResource(R.drawable.ic_placeholder);
+        }
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ItemDetailsPage.class);
             intent.putExtra("itemName", item.getName());
             intent.putExtra("itemDetails", item.getDetails());
             intent.putExtra("itemPrice", item.getPrice());
-            intent.putExtra("itemImage", R.drawable.ic_placeholder); // Pass actual image resource if available
+            intent.putExtra("itemImageUrl", item.getImageUrl());
             context.startActivity(intent);
         });
     }
@@ -58,7 +63,7 @@ public class ItemAdapterMainPage extends RecyclerView.Adapter<ItemAdapterMainPag
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
-        TextView name,details, price;
+        TextView name, details, price;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);

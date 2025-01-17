@@ -5,17 +5,18 @@ public class Item {
     private String price;
     private String details;
     private String id;
-    private String imageUrl;  // New field for image URL
+    private String imageUrl;
 
     // No-argument constructor required for Firebase
     public Item() {}
+
     public Item(String name, String price, String details, String imageUrl) {
         this.name = name;
         this.price = price;
         this.details = details;
-        this.imageUrl = imageUrl;  // Initialize imageUrl
+        this.imageUrl = imageUrl;
     }
-    // Constructor with parameters
+
     public Item(String name, String details, String price) {
         this.name = name;
         this.price = price;
@@ -31,7 +32,11 @@ public class Item {
         return id;
     }
 
-    // Getters and Setters (required by Firebase)
+    // Add this method to fix the error
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -56,7 +61,6 @@ public class Item {
         this.details = details;
     }
 
-    // New getter and setter for imageUrl
     public String getImageUrl() {
         return imageUrl;
     }

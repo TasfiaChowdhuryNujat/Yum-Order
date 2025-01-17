@@ -1,5 +1,4 @@
 package com.nujat.yumorder.main_page;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainPage extends AppCompatActivity {
-
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ItemAdapterMainPage adapter;
@@ -33,32 +31,25 @@ public class MainPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_page);
 
-        // Set up the Toolbar
         Toolbar toolbar = findViewById(R.id.app_toolbar);
         setSupportActionBar(toolbar);
 
-        // Initialize RecyclerView and SwipeRefreshLayout
         recyclerView = findViewById(R.id.recyclerView_items);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
 
-        // Set up RecyclerView with a GridLayoutManager
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // 2 columns for grid layout
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         itemList = new ArrayList<>();
         adapter = new ItemAdapterMainPage(this, itemList);
         recyclerView.setAdapter(adapter);
 
-        // Initialize Firestore
         db = FirebaseFirestore.getInstance();
-
-        // Load items
         loadItems();
 
-        // Set up SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(this::loadItems);
     }
 
     private void loadItems() {
-        swipeRefreshLayout.setRefreshing(true); // Show refresh indicator
+        swipeRefreshLayout.setRefreshing(true);
         db.collection("items")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -67,17 +58,17 @@ public class MainPage extends AppCompatActivity {
                         String name = document.getString("name");
                         String details = document.getString("details");
                         String price = document.getString("price");
-                        itemList.add(new Item(name, details, price));
+                        String imageUrl = document.getString("imageUrl"); // Get image URL from Firebase
+                        itemList.add(new Item(name, details, price, imageUrl));
                     }
                     adapter.notifyDataSetChanged();
-                    swipeRefreshLayout.setRefreshing(false); // Hide refresh indicator
+                    swipeRefreshLayout.setRefreshing(false);
                 })
-                .addOnFailureListener(e -> swipeRefreshLayout.setRefreshing(false)); // Hide on failure
+                .addOnFailureListener(e -> swipeRefreshLayout.setRefreshing(false));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu with the cart and logout options
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -86,13 +77,11 @@ public class MainPage extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_cart) {
-            // Navigate to the cart activity
             Intent cartIntent = new Intent(MainPage.this, CartActivity.class);
             startActivity(cartIntent);
             return true;
         } else if (id == R.id.action_logout) {
-            FirebaseAuth auth = FirebaseAuth.getInstance();
-            auth.signOut();
+            FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(MainPage.this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -100,5 +89,4 @@ public class MainPage extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }
