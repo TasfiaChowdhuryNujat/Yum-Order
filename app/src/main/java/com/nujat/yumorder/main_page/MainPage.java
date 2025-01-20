@@ -59,7 +59,7 @@ public class MainPage extends AppCompatActivity {
                         String details = document.getString("details");
                         String price = document.getString("price");
                         String imageUrl = document.getString("imageUrl"); // Get image URL from Firebase
-                        itemList.add(new Item(name, details, price, imageUrl));
+                        itemList.add(new Item(name, price, details, imageUrl));
                     }
                     adapter.notifyDataSetChanged();
                     swipeRefreshLayout.setRefreshing(false);
