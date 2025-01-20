@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nujat.yumorder.R;
@@ -65,31 +66,37 @@ public class LoginPage extends AppCompatActivity {
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        // Login successful, check user's userType in Firestore
-                        String userId = auth.getCurrentUser().getUid();
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        FirebaseUser user = auth.getCurrentUser();
+                        if (user != null && user.isEmailVerified()) {
+                            // Email is verified, proceed to check user type
+                            String userId = user.getUid();
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                        db.collection("users").document(userId).get()
-                                .addOnCompleteListener(dbTask -> {
-                                    if (dbTask.isSuccessful() && dbTask.getResult() != null) {
-                                        DocumentSnapshot document = dbTask.getResult();
-                                        String userType = document.getString("userType");
+                            db.collection("users").document(userId).get()
+                                    .addOnCompleteListener(dbTask -> {
+                                        if (dbTask.isSuccessful() && dbTask.getResult() != null) {
+                                            DocumentSnapshot document = dbTask.getResult();
+                                            String userType = document.getString("userType");
 
-                                        if ("admin".equals(userType)) {
-                                            // Navigate to AdminPage if user is admin
-                                            Intent intent = new Intent(LoginPage.this, AdminPage.class);
-                                            startActivity(intent);
+                                            if ("admin".equals(userType)) {
+                                                // Navigate to AdminPage if user is admin
+                                                Intent intent = new Intent(LoginPage.this, AdminPage.class);
+                                                startActivity(intent);
+                                            } else {
+                                                // Navigate to MainPage if user is not admin
+                                                Intent intent = new Intent(LoginPage.this, MainPage.class);
+                                                startActivity(intent);
+                                            }
                                         } else {
-                                            // Navigate to MainPage if user is not admin
-                                            Intent intent = new Intent(LoginPage.this, MainPage.class);
-                                            startActivity(intent);
+                                            // Handle potential errors (e.g., no document found or other failure)
+                                            Toast.makeText(LoginPage.this, "Error fetching user data", Toast.LENGTH_SHORT).show();
                                         }
-                                    } else {
-                                        // Handle potential errors (e.g., no document found or other failure)
-                                        Toast.makeText(LoginPage.this, "Error fetching user data", Toast.LENGTH_SHORT).show();
-                                    }
-                                    finish(); // Close LoginPage
-                                });
+                                        finish(); // Close LoginPage
+                                    });
+                        } else {
+                            // Email is not verified
+                            Toast.makeText(LoginPage.this, "Please verify your email address before logging in.", Toast.LENGTH_LONG).show();
+                        }
                     } else {
                         // Login failed
                         Toast.makeText(LoginPage.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
