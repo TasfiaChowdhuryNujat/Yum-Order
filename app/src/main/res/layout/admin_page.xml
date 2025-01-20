@@ -34,7 +34,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="Add Item"
+        android:text="@string/add_item"
+        android:backgroundTint="#fa4a0c"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
         android:layout_marginBottom="16dp" />
 
     <!-- Item List Layout -->

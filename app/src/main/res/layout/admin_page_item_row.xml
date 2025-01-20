@@ -28,7 +28,10 @@
         android:id="@+id/button_update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/update" />
+        android:text="@string/update"
+        android:backgroundTint="#fa4a0c"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"/>
 
     <!-- Delete Button -->
     <Button
@@ -36,5 +39,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/delete"
+        android:backgroundTint="#fa4a0c"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
         android:layout_marginStart="8dp" />
 </LinearLayout>

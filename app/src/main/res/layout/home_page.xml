@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/logo"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="120dp"
         android:textAlignment="center"
         android:text="@string/welcome_to_yumorder"
         android:textColor="#FFFFFF"
@@ -40,6 +40,7 @@
         android:backgroundTint="#F6F0F0"
         android:text="Continue"
         android:textColor="#B63131"
-        android:textSize="16sp"
+        android:textSize="17sp"
+        android:textStyle="bold"
         android:fontFamily="sans-serif" />
 </RelativeLayout>

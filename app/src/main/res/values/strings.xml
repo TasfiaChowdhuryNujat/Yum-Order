@@ -17,4 +17,25 @@
     <string name="delete">Delete</string>
     <string name="item_details">Item Details</string>
     <string name="item_price">Item Price</string>
+    <string name="qnt_0">Qnt:0</string>
+    <string name="total_0_00">Total: $0.00</string>
+    <string name="checkout">Checkout</string>
+    <string name="price">Price</string>
+    <string name="details">Details</string>
+    <string name="image_preview">Image preview</string>
+    <string name="upload_image">Upload Image</string>
+    <string name="add_item">Add Item</string>
+    <string name="price_0_00">Price: $0.00</string>
+    <string name="u">U</string>
+    <string name="x">X</string>
+    <string name="checkout_summary">Checkout Summary</string>
+    <string name="details_will_be_displayed_here">Details will be displayed here.</string>
+    <string name="total_amount_0_00">Total Amount: $0.00</string>
+    <string name="close">Close</string>
+    <string name="name">Name</string>
+    <string name="decrease">-</string>
+    <string name="_1">1</string>
+    <string name="increase">+</string>
+    <string name="add_to_cart">Add to Cart</string>
+    <string name="cart">Cart</string>
 </resources>

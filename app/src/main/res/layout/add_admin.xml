@@ -9,7 +9,7 @@
         android:id="@+id/name_Field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Item Name"
+        android:hint="@string/item_name"
         android:inputType="text" />
 
     <!-- Price Field -->
@@ -17,7 +17,7 @@
         android:id="@+id/price_Field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Price"
+        android:hint="@string/price"
         android:inputType="numberDecimal" />
 
     <!-- Details Field -->
@@ -25,7 +25,7 @@
         android:id="@+id/details_Field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Details"
+        android:hint="@string/details"
         android:inputType="text" />
 
     <!-- Image Preview -->
@@ -35,22 +35,28 @@
         android:layout_height="200dp"
         android:layout_marginTop="16dp"
         android:src="@drawable/ic_placeholder"
-        android:contentDescription="Image preview" />
+        android:contentDescription="@string/image_preview" />
 
     <!-- Upload Image Button -->
     <Button
         android:id="@+id/uploadImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Upload Image"
-        android:layout_marginTop="16dp" />
+        android:text="@string/upload_image"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#fa4a0c"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"/>
 
     <!-- Add Item Button -->
     <Button
         android:id="@+id/add_ItemButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Item"
-        android:layout_marginTop="16dp" />
+        android:text="@string/add_item"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#fa4a0c"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"/>
 
 </LinearLayout>
