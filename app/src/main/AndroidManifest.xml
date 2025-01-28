@@ -4,7 +4,8 @@
     <!-- Required permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
     <application
         android:allowBackup="true"
@@ -28,12 +29,14 @@
 
         <activity
             android:name=".ItemAdapter"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="Instantiatable">
 
         </activity>
         <activity
             android:name=".ItemAdapterMainPage"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="Instantiatable">
         </activity>
         <activity
             android:name=".CartActivity"
@@ -41,11 +44,13 @@
         </activity>
         <activity
             android:name=".CartAdapter"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="Instantiatable">
         </activity>
         <activity
             android:name=".CartItem"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="Instantiatable">
         </activity>
         <activity
             android:name=".item_details_page.ItemDetailsPage"
@@ -78,7 +83,8 @@
         </activity>
         <activity
             android:name=".Item"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="Instantiatable">
         </activity>
 
     </application>

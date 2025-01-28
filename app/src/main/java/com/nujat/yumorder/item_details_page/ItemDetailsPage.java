@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ItemDetailsPage extends AppCompatActivity {
-    private int itemCount = 1;
+    private int itemCount = 1;// Start with 1 item
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

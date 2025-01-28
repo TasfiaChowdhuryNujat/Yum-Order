@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminPage extends AppCompatActivity {
-    private RecyclerView recyclerView;
-    private ItemAdapter adapter;
+    private RecyclerView recyclerView;// RecyclerView to display the list of items
+    private ItemAdapter adapter;// Adapter to manage the items in the RecyclerView
     private List<Item> itemList;
     private FirebaseFirestore db;
     private SwipeRefreshLayout swipeRefreshLayout;

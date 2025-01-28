@@ -30,7 +30,6 @@
     <string name="x">X</string>
     <string name="checkout_summary">Checkout Summary</string>
     <string name="details_will_be_displayed_here">Details will be displayed here.</string>
-    <string name="total_amount_0_00">Total Amount: $0.00</string>
     <string name="close">Close</string>
     <string name="name">Name</string>
     <string name="decrease">-</string>

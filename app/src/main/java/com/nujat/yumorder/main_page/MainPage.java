@@ -42,40 +42,41 @@ public class MainPage extends AppCompatActivity {
         adapter = new ItemAdapterMainPage(this, itemList);
         recyclerView.setAdapter(adapter);
 
-        db = FirebaseFirestore.getInstance();
-        loadItems();
+        db = FirebaseFirestore.getInstance();// Initializes Firestore
+        loadItems();// Loads data from Firestore
 
-        swipeRefreshLayout.setOnRefreshListener(this::loadItems);
+        swipeRefreshLayout.setOnRefreshListener(this::loadItems);// Refresh data on swipe
     }
 
     private void loadItems() {
-        swipeRefreshLayout.setRefreshing(true);
-        db.collection("items")
-                .get()
+        swipeRefreshLayout.setRefreshing(true);// Start showing refresh animation
+        db.collection("items")// Access the "items" collection from Firestore
+                .get()// Get all documents in the collection
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    itemList.clear();
+                    itemList.clear();// Clear the previous data
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String name = document.getString("name");
                         String details = document.getString("details");
                         String price = document.getString("price");
                         String imageUrl = document.getString("imageUrl"); // Get image URL from Firebase
+                        // Add new item to the list
                         itemList.add(new Item(name, price, details, imageUrl));
                     }
-                    adapter.notifyDataSetChanged();
-                    swipeRefreshLayout.setRefreshing(false);
+                    adapter.notifyDataSetChanged(); // Notify adapter that the data has changed
+                    swipeRefreshLayout.setRefreshing(false);// Stop refresh animation
                 })
                 .addOnFailureListener(e -> swipeRefreshLayout.setRefreshing(false));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        getMenuInflater().inflate(R.menu.menu_main, menu);// Inflate the menu from XML
+        return true;// Return true to display the menu
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        int id = item.getItemId(); // Get the ID of the clicked menu item
         if (id == R.id.action_cart) {
             Intent cartIntent = new Intent(MainPage.this, CartActivity.class);
             startActivity(cartIntent);
@@ -84,7 +85,7 @@ public class MainPage extends AppCompatActivity {
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(MainPage.this, MainActivity.class);
             startActivity(intent);
-            finish();
+            finish(); finish();  // Finish the current activity so the user can't go back
             return true;
         }
         return super.onOptionsItemSelected(item);

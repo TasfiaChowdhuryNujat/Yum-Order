@@ -24,7 +24,7 @@
         android:id="@+id/tv_total_amount_dialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/total_amount_0_00"
+        android:text="@string/total_0_00"
         android:textStyle="bold"
         android:paddingBottom="16dp" />
 
